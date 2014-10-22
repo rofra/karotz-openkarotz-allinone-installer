@@ -8,9 +8,7 @@ This repo is an aggregate of various other git repos (with submodules) that allo
 
 This is an auto generation tool from sources for an "All in one" OpenKarotz installer
 
-
-
-## How to use ?
+## How to init the project ?
 
 Here are the steps:
 
@@ -19,6 +17,11 @@ Here are the steps:
   1. `git submodule add -b dev git@github.com:rofra/karotz-openkarotz-websources-installer.git websources`
 - Generate the full package with this command line: `sudo bash -x ./bin/makeallinstallerimage.sh` 
 - Place all the files in *generatedimage/* directory in the root of your USB key 
+
+## How to update the project ?
+
+Use the command line `git submodule foreach git pull` to update the dependencies and regenerate the full package.
+
 ## Dependencies
 You will need to find required dependencies for generating rootfs file and so on
 
