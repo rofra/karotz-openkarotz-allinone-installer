@@ -13,8 +13,8 @@ This is an auto generation tool from sources for an "All in one" OpenKarotz inst
 Here are the steps:
 
 - Add the git submodules:
-  1. `git submodule add -b dev git@github.com:rofra/karotz-openkarotz-firmware.git firmware`
-  1. `git submodule add -b dev git@github.com:rofra/karotz-openkarotz-websources-installer.git websources`
+  1. `git submodule add -b dev -f git@github.com:rofra/karotz-openkarotz-firmware.git firmware`
+  1. `git submodule add -b dev -f git@github.com:rofra/karotz-openkarotz-websources-installer.git websources`
 - Generate the full package with this command line: `sudo bash -x ./bin/makeallinstallerimage.sh` 
 - Place all the files in *generatedimage/* directory in the root of your USB key 
 
