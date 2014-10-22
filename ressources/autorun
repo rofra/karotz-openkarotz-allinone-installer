@@ -1,0 +1,96 @@
+#!/bin/bash
+# ---------------------------------------------------------------------------
+# 
+# Karotz Auto Install Script
+# 
+# Author: Rodolphe Franceschi <rodolphe.franceschi@gmail.com>
+# 
+# Under MIT License 
+# @ see http://opensource.org/licenses/MIT
+#
+# ---------------------------------------------------------------------------
+
+export HOME=/tmp
+export GNUPGHOME=/tmp/
+
+CURRDIRINSTALLER="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+LED=/karotz/bin/led
+
+function led_orange_pulse {
+    # killall led
+    $LED -l FFA500 -p 000000 -d 700 &
+}
+
+function led_red {
+    killall led
+    $LED -l ff0000
+}
+
+function led_green {
+    killall led
+    $LED -l 00ff00
+}
+
+function SAY {
+    LD_LIBRARY_PATH=/tmp /tmp/madplay /tmp/$1.mp3 $2
+}
+
+function LOG {
+    echo $1 >> ${CURRDIRINSTALLER}/logautorun.txt
+}
+
+function ERROR {
+    LOG "$1" 
+    sync
+    killall musicloop.sh
+    killall madplay
+    SAY "Karotz_error"
+    SAY "error"
+    killall led
+    /karotz/bin/led -l FF0000 -b 000000 &
+    exit
+}
+
+# Unpack Tools
+tar -xvf ${CURRDIRINSTALLER}/tools2.tar -C /tmp/
+
+# killall LED + Music
+killall led
+killall madplay
+
+cp -r ${CURRDIRINSTALLER}/sound/*.mp3 /tmp/
+ls /tmp
+
+SAY "Karotz_SFX_USB"
+
+if [ -f ${CURRDIRINSTALLER}/updatedone ]; then
+    LOG "[USBKEY] ## UPDATE ALREADY DONE"
+    exit 0
+fi
+
+
+cd $(dirname $0)
+
+led_orange_pulse
+
+# Installing
+LOG "Installing"
+bash ${CURRDIRINSTALLER}/openkarotz/install
+
+LOG "GREEN"
+led_green
+sleep 2
+
+LOG "[USBKEY] ## All done. Rebooting."
+SAY "Karotz_SFX_OK"
+cd ..
+
+LOG "TOUCHING"
+touch ${CURRDIRINSTALLER}/updatedone
+sleep 1
+
+SAY "karotz_off"
+echo  "::once:/sbin/reboot" >> /etc/inittab
+
+
