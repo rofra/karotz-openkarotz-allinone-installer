@@ -36,13 +36,16 @@ rm -fr ${ROOTDIR}generatedimage/
 mkdir ${ROOTDIR}generatedimage/
 cp -f ${ROOTDIR}ressources/autorun  ${ROOTDIR}ressources/autorun.sig ${ROOTDIR}ressources/tools2.tar  ${ROOTDIR}generatedimage/ 
 cp -fR ${ROOTDIR}ressources/sound ${ROOTDIR}generatedimage/ 
+cp -fR ${ROOTDIR}ressources/conf ${ROOTDIR}generatedimage/
+
 mv -f ${ROOTDIR}firmware/rootfs.img.gz ${ROOTDIR}firmware/rootfs.img.gz.md5 ${ROOTDIR}generatedimage/
 cp -fR ${ROOTDIR}websources/ ${ROOTDIR}generatedimage/openkarotz/
+
 
 echo "Managing rights problems"
 chmod -R 755 ${ROOTDIR}generatedimage/
 
-echo "OK! Your installer is generated in generatedimage directory"
+echo "OK! Your installer is generated in 'generatedimage' directory"
 echo "End of the generation"
 
 
