@@ -24,8 +24,18 @@ function led_orange
 }
 
 function led_orange_pulse {
-    # killall led
+    killall led
     $LED -l FFA500 -p 000000 -d 700 &
+}
+
+function led_violet_pulse {
+    killall led
+    $LED -l FF24C5 -p 000000 -d 700 &
+}
+
+function led_blue_pulse {
+    killall led
+    $LED -l 5519FA -p 000000 -d 700 &
 }
 
 function led_red {
@@ -113,7 +123,6 @@ else
   exit 1
 fi
 
-led_orange
 LOG "Installing rootfs"
 
 echo "Erasing Flash"
@@ -126,6 +135,10 @@ LOG "Flashing Firmware"
 LOG "Flashing Firmware done"
 
 sleep 20
+
+
+LOG "Web Server Configuration"
+led_blue_pulse
 
 # Configuration for HTTPD, out of rootfs
 if [ ! -f /usr/httpd.conf ]; then
@@ -141,26 +154,28 @@ if [ ! -d /usr/www/ ]; then
   chown -R 51.51 /usr/www/
 fi
 
+sleep 10
 
 
-led_orange_pulse
 # Installing Web App
-cd ${CURRDIRINSTALLER}
-
 LOG "Installing Web App"
+led_violet_pulse
+
 bash ${CURRDIRINSTALLER}/openkarotz/install
 
 LOG "Web App installation end"
-led_green
-sleep 3
+sleep 5
+
+
 
 LOG "[USBKEY] ## All done. Rebooting."
 SAY "Karotz_SFX_OK"
+led_green
 cd ..
 
 LOG "TOUCHING"
 touch ${CURRDIRINSTALLER}/updatedone
-sleep 1
+sleep 3
 
 SAY "karotz_off"
 echo  "::once:/sbin/reboot" >> /etc/inittab
