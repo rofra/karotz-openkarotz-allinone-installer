@@ -1,6 +1,0 @@
-[submodule "firmware"]
-	path = firmware
-	url = git@github.com:rofra/karotz-openkarotz-firmware.git
-[submodule "websources"]
-	path = websources
-	url = git@github.com:rofra/karotz-openkarotz-websources-installer.git
