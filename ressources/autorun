@@ -48,6 +48,17 @@ function led_green {
     $LED -l 00ff00
 }
 
+function led_yellow_pulse {
+    killall led
+    $LED -l FAE932 -p 000000 -d 700 &
+}
+
+function led_pink_pulse {
+    killall led
+    $LED -l FA328C -p 000000 -d 700 &
+}
+
+
 function SAY {
     LD_LIBRARY_PATH=/tmp /tmp/madplay /tmp/$1.mp3 $2
 }
@@ -130,6 +141,7 @@ LOG "Erasing Flash"
 /sbin/flash_eraseall /dev/mtd2
 
 echo "Flashing new firmware"
+led_pink_pulse
 LOG "Flashing Firmware"
 /sbin/nandwrite -pm /dev/mtd2 ${CURRDIRINSTALLER}/rootfs.img.gz
 LOG "Flashing Firmware done"
@@ -167,14 +179,15 @@ LOG "Web App installation end"
 sleep 5
 
 
-
+led_yellow_pulse
 LOG "[USBKEY] ## All done. Rebooting."
 SAY "Karotz_SFX_OK"
-led_green
 cd ..
+sleep 5
 
 LOG "TOUCHING"
 touch ${CURRDIRINSTALLER}/updatedone
+led_green
 sleep 3
 
 SAY "karotz_off"
