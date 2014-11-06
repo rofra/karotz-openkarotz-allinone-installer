@@ -42,6 +42,8 @@ cp -fR ${ROOTDIR}ressources/conf ${ROOTDIR}generatedimage/
 mv -f ${ROOTDIR}firmware/rootfs.img.gz ${ROOTDIR}firmware/rootfs.img.gz.md5 ${ROOTDIR}generatedimage/
 cp -fR ${ROOTDIR}websources/ ${ROOTDIR}generatedimage/openkarotz/
 find ${ROOTDIR}generatedimage/openkarotz/ -name .gitignore -exec rm -f {} \;
+# Post Install scripts
+cp -fR ${ROOTDIR}postinstall/ ${ROOTDIR}generatedimage/postinstall/
 
 
 echo "Managing rights problems"

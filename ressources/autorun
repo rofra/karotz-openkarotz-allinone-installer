@@ -178,6 +178,14 @@ bash ${CURRDIRINSTALLER}/openkarotz/install
 LOG "Web App installation end"
 sleep 5
 
+# Manage Post-Install
+BINDIRS=$( find ${CURRDIRINSTALLER}/postinstall/ -mindepth 2 -maxdepth 2 -name bin -type d );
+for i in ${BINDIRS}; do
+    if [ -f ${BINDIRS}/install.sh ]; then
+        bash ${BINDIRS}/install.sh
+    fi
+done
+
 
 led_yellow_pulse
 LOG "[USBKEY] ## All done. Rebooting."
