@@ -1,6 +1,7 @@
 #/bin/bash
 
-CURRDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+CURRDIR="$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"
+CURRDIR=$(dirname "${CURRDIR}")
 ROOTDIR=$CURRDIR/../
 cd $ROOTDIR
 
