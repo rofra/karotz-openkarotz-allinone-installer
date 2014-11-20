@@ -33,6 +33,11 @@ function led_violet_pulse {
     $LED -l FF24C5 -p 000000 -d 700 &
 }
 
+function led_nearblue_pulse {
+    killall led
+    $LED -l 9CE2E6 -p 000000 -d 700 &
+}
+
 function led_blue_pulse {
     killall led
     $LED -l 5519FA -p 000000 -d 700 &
@@ -178,13 +183,20 @@ bash ${CURRDIRINSTALLER}/openkarotz/install
 LOG "Web App installation end"
 sleep 5
 
+
+
+
 # Manage Post-Install
+LOG "Managing Post Install Scripts"
+led_nearblue_pulse
 BINDIRS=$( find ${CURRDIRINSTALLER}/postinstall/ -mindepth 2 -maxdepth 2 -name bin -type d );
 for i in ${BINDIRS}; do
     if [ -f ${BINDIRS}/install.sh ]; then
         bash ${BINDIRS}/install.sh
     fi
 done
+
+sleep 5
 
 
 led_yellow_pulse
