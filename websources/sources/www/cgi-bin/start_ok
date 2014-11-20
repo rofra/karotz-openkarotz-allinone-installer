@@ -1,0 +1,88 @@
+#!/bin/bash
+
+source /www/cgi-bin/setup.inc
+source /www/cgi-bin/utils.inc
+source /www/cgi-bin/leds.inc
+source /www/cgi-bin/ears.inc
+
+EarsReset
+
+# Check for sound player command channel
+if [ ! -f "/tmp/mplayer-control" ]; then
+ mkfifo /tmp/mplayer-control
+fi
+
+# Check for mandatory directory 
+if [ ! -d "$CNF_DATADIR/Rfid" ]; then
+ mkdir $CNF_DATADIR/Rfid
+fi
+
+if [ ! -d "$CNF_DATADIR/Tmp" ]; then
+  mkdir $CNF_DATADIR/Tmp
+fi       
+
+if [ ! -d "$CNF_DATADIR/Run" ]; then
+ mkdir $CNF_DATADIR/Run
+fi       
+
+# Remove old PID
+rm -f /var/run/karotz/led.pid /var/run/karotz/rfid.pid /var/run/karotz/button.pid 
+rm -f /var/run/karotz/ears.pid var/run/karotz/webcam.pid /var/run/karotz/dbus_events.pid
+rm -f /var/run/karotz/voice.pid /var/run/karotz/controller.pid /var/run/multimedia.pid
+
+
+# killing immortal dog daemon
+killall immortaldog
+
+sleep 5
+
+# Kill dbus Monitoring
+killall dbus-monitor
+
+# Stop sound
+killall mplayer madplay
+
+# reset existing flag and state
+rm -f $CNF_DATADIR/Run/karotz.sleep
+rm -f $CNF_DATADIR/Run/led.color
+rm -f $CNF_DATADIR/Run/led.pulse
+rm -f $CNF_DATADIR/Run/rfid.record
+rm -f $CNF_DATADIR/Run/rfid.delete
+
+
+# Start The TTS emulator service
+if [ -f /usr/karotz/ttsemulator/launcher.sh ]; then
+     chmod a+x /usr/karotz/ttsemulator/launcher.sh
+    /usr/karotz/ttsemulator/launcher.sh start
+fi
+
+#sleep 8
+
+
+# Restart mpd
+#/usr/bin/mpd /etc/mpd/mpd.conf
+
+# Start the ntpd daemon to allow actualisation of time once deconnected from official servers
+killall ntpd
+/bin/ntpd -p fr.pool.ntp.org
+
+# Launch needed daemon only
+/usr/karotz/bin/immortaldog /var/run/karotz/led.pid /usr/karotz/bin/led-daemon
+/usr/karotz/bin/immortaldog /var/run/karotz/rfid.pid /usr/karotz/bin/rfid-daemon
+/usr/karotz/bin/immortaldog /var/run/karotz/button.pid /usr/karotz/bin/button-daemon
+/usr/karotz/bin/immortaldog /var/run/karotz/ears.pid /usr/karotz/bin/ears-daemon
+/usr/karotz/bin/immortaldog /var/run/karotz/webcam.pid /usr/karotz/bin/webcam-daemon 
+/usr/karotz/bin/immortaldog /var/run/karotz/dbus_events.pid /www/cgi-bin/dbus_events
+
+if [ -f /usr/karotz/ttsemulator/launcher.sh ]; then
+    /usr/karotz/bin/immortaldog /var/run/karotz/voice.pid /usr/karotz/bin/voice-daemon
+    /usr/karotz/bin/immortaldog /var/run/karotz/multimedia.pid /usr/karotz/bin/multimedia-daemon
+    /usr/karotz/bin/immortaldog /var/run/karotz/controller.pid /usr/karotz/bin/controller
+fi
+
+
+PlaySound $CNF_DATADIR/Sounds/ready.mp3
+Leds 00FF00 000000 1
+
+EarsMove 12 12 100
+
